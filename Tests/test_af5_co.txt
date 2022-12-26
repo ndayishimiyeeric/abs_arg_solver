@@ -1,0 +1,9 @@
+Complete extensions:
+[]
+[A,C,F]
+
+Skeptically accepted arguments:
+None of them
+
+Credulously accepted arguments:
+A, C, F

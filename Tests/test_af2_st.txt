@@ -1,0 +1,11 @@
+Stable extensions:
+[B,D]
+[B,E]
+[A,E]
+[A,D]
+
+Skeptically accepted arguments:
+None of them
+
+Credulously accepted arguments:
+A, B, D, E

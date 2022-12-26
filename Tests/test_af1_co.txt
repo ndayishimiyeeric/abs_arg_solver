@@ -1,0 +1,10 @@
+Complete extensions:
+[]
+[B,D]
+[A,D]
+
+Skeptically accepted arguments:
+None of them
+
+Credulously accepted arguments:
+A, B, D
