@@ -9,4 +9,4 @@ att(A,C).
 att(B,C).
 att(C,D).
 att(D,E).
-att(E,D)
+att(E,D).
