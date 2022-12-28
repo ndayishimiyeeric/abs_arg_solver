@@ -26,3 +26,36 @@ with open(args.file, "r") as f:
             if attack[1][-1] == ')':
                 attack[1] = attack[1][:-1]
             af[attack[0]].append(attack[1])
+
+admissibles = []
+
+
+def generate_subsets(af, subset):
+    args = set(af.keys())
+    if len(subset) >= len(af):
+        return
+    if is_admissible(af, subset):
+        admissibles.append(subset)
+    for arg in args:
+        if arg not in subset:
+            new_subset = subset + [arg]
+            generate_subsets(af, new_subset)
+
+
+def is_admissible(af, subset):
+    return is_conflit_free(af, subset) and is_self_defending(af, subset)
+
+
+def is_conflit_free(af, subset):
+    for arg in subset:
+        if any(attacked in subset for attacked in af[arg]):
+            return False
+    return True
+
+
+def is_self_defending(af, subset):
+    for arg in af:
+        if any(attacked in subset for attacked in af[arg]):
+            if not any(attacker in subset for attacker in af[arg]):
+                return False
+    return True
