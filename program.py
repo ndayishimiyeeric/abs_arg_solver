@@ -28,6 +28,8 @@ with open(args.file, "r") as f:
             af[attack[0]].append(attack[1])
 
 admissibles = []
+c_f_list = []
+substitutes = []
 
 
 def generate_subsets(af, subset):
@@ -36,6 +38,9 @@ def generate_subsets(af, subset):
         return
     if is_admissible(af, subset):
         admissibles.append(subset)
+
+    if is_conflit_free(af, subset):
+        c_f_list.append(subset)
     for arg in args:
         if arg not in subset:
             new_subset = subset + [arg]
@@ -89,7 +94,7 @@ def check_args_in_relation(af, args):
     return all(i[0] in args or i[1] in args for i in attacks)
 
 
-if args.problem == "SE-CO":
+def com_ex():
     complete_extensions = []
     subset = []
     generate_subsets(af, subset)
@@ -109,9 +114,94 @@ if args.problem == "SE-CO":
                             complete_extensions.append(adm)
                 else:
                     complete_extensions.append(adm)
+    return complete_extensions
 
+
+def sta_ex():
+    complete_extensions = com_ex()
+
+    stable_extensions = []
+    subset = []
+    generate_subsets(af, subset)
+
+    for se in c_f_list:
+        if all(any(attacked in se for attacked in af[arg]) for arg in af if arg not in se):
+            se.sort()
+            if se not in stable_extensions:
+                if se in complete_extensions:
+                    stable_extensions.append(se)
+
+    return stable_extensions
+
+
+if args.problem == "SE-CO":
+    complete_extensions = com_ex()
+    complete_extensions.sort(key=len)
+    # substitutes = complete_extensions
     if complete_extensions:
         for extension in complete_extensions:
             print(extension)
+            substitutes.append(extension)
     else:
         print("None.")
+
+elif args.problem == "DC-CO":
+
+    complete_extensions = com_ex()
+
+    complete_extensions.sort(key=len)
+    substitutes = complete_extensions
+    if complete_extensions:
+        for extension in complete_extensions:
+            if args.argument in extension:
+                print("YES")
+                break
+        else:
+            print("NO")
+
+
+elif args.problem == "DS-CO":
+
+    complete_extensions = com_ex()
+    complete_extensions.sort(key=len)
+    substitutes = complete_extensions
+    if complete_extensions:
+        for extension in complete_extensions:
+            if args.argument not in extension:
+                print("NO")
+                break
+        else:
+            print("YES")
+
+
+elif args.problem == "SE-ST":
+    stable_extensions = sta_ex()
+
+    stable_extensions.sort(key=len)
+    if stable_extensions:
+        for extension in stable_extensions:
+            print(extension)
+
+elif args.problem == "DC-ST":
+
+    stable_extensions = sta_ex()
+    stable_extensions.sort(key=len)
+    if stable_extensions:
+        for extension in stable_extensions:
+            if args.argument in extension:
+                print("YES")
+                break
+        else:
+            print("NO")
+
+elif args.problem == "DS-ST":
+
+    stable_extensions = sta_ex()
+    stable_extensions.sort(key=len)
+    if stable_extensions:
+        for extension in stable_extensions:
+            if args.argument not in extension:
+                print("NO")
+                break
+        else:
+            print("YES")
